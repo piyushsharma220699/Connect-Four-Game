@@ -103,6 +103,8 @@ size=(width,height)
 screen=pygame.display.set_mode(size)
 draw_board(board)
 pygame.display.update()
+mixer.music.load('startsound.ogg')
+mixer.music.play()
 
 font=pygame.font.SysFont("comicsansms", 70)
 
