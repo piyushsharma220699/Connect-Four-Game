@@ -6,3 +6,4 @@ Each player may drop only one checker into the grid per turn. A winner is declar
 
 TIME COMPLEXITY: O(1)
 The focus was on decreasing the time complexity of the game from O(n^2) to O(1).
+
