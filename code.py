@@ -4,6 +4,7 @@ import numpy as npy
 import pygame
 import sys
 import math
+from pygame import mixer
 
 ROWLENGTH=6
 COLUMNLENGTH=8
@@ -128,6 +129,8 @@ while not someone_won:
 
                 if valid_location(board,user_input):
                     row=add_piece_to_board(board,user_input,1)
+                    mixer.music.load('insertsound.wav')
+                    mixer.music.play()
                     if check_if_won(board,row,user_input):
                         pygame.draw.rect(screen,(0,0,0),(0,0,COLUMNLENGTH*LENGTHOFBOX,LENGTHOFBOX))
                         label=font.render("PLAYER 1 WINS!!!",1,(255,0,0))
@@ -141,6 +144,8 @@ while not someone_won:
 
                 if valid_location(board,user_input):
                     row=add_piece_to_board(board,user_input,2)
+                    mixer.music.load('insertsound.wav')
+                    mixer.music.play()
                     if check_if_won(board,row,user_input):
                         pygame.draw.rect(screen,(0,0,0),(0,0,COLUMNLENGTH*LENGTHOFBOX,LENGTHOFBOX))
                         label=font.render("PLAYER 2 WINS!!!",1,(0,255,0))
@@ -148,6 +153,7 @@ while not someone_won:
                         someone_won=True
 
             draw_board(board)
+            
 
             if turn == 1:
                 turn=2
@@ -155,4 +161,6 @@ while not someone_won:
                 turn=1
         
     if someone_won:
+        mixer.music.load('winsound.mp3')
+        mixer.music.play()
         pygame.time.wait(5000)
