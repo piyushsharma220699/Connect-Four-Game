@@ -1,4 +1,7 @@
 import numpy as npy
+import pygame
+import sys
+import math
 
 def getboard(row,col):
     board=npy.zeros((row,col))
@@ -20,56 +23,127 @@ def check_if_won(board,temprow,tempcol):
     if row-3>=0 and board[row][col]==board[row-1][col] and board[row][col]==board[row-2][col] and board[row][col]==board[row-3][col]:
         return True
     
-    elif col-3>=0 and board[row][col]==board[row][col-1] and board[row][col]==board[row][col-2] and board[row][col]==board[row][col-3]:
-        return True
+    index=1
+    num=1
+    while num<=3 and index<=3 and col-index>=0 and board[row][col]==board[row][col-index]:
+        num=num+1
+        index=index+1
     
-    elif col+3<=6 and board[row][col]==board[row][col+1] and board[row][col]==board[row][col+2] and board[row][col]==board[row][col+3]:
-        return True
-    
-    elif row-3>=0 and col-3>=0 and board[row][col]==board[row-1][col-1] and board[row][col]==board[row-2][col-2] and board[row][col]==board[row-3][col-3]:
-        return True
-    
-    elif row-3>=0 and col+3<=6 and board[row][col]==board[row-1][col+1] and board[row][col]==board[row-2][col+2] and board[row][col]==board[row-3][col+3]:
-        return True
+    index=1
+    while num<=3 and col+index<=6 and board[row][col]==board[row][col+index]:
+        num=num+1
+        index=index+1
 
-    elif row+3<=5 and col-3>=0 and board[row][col]==board[row+1][col-1] and board[row][col]==board[row+2][col-2] and board[row][col]==board[row+3][col-3]:
+    if num>3:
         return True
     
-    elif row+3<=5 and col+3<=6 and board[row][col]==board[row+1][col+1] and board[row][col]==board[row+2][col+2] and board[row][col]==board[row+3][col+3]:
+    index=1
+    num=1
+    while num<=3 and row-index>=0 and col-index>=0 and board[row][col]==board[row-index][col-index]:
+        num=num+1
+        index=index+1
+
+    index=1
+    while num<=3 and row+index<=5 and col+index<=6 and board[row][col]==board[row+index][col+index]:
+        num=num+1
+        index=index+1
+
+    if num>3:
+        return True
+    
+    index=1
+    num=1
+    while num<=3 and row+index<=5 and col-index>=0 and board[row][col]==board[row+index][col-index]:
+        num=num+1
+        index=index+1
+    
+    index=1
+    while num<=3 and row-index>=0 and col+index<=6 and board[row][col]==board[row-index][col+index]:
+        num=num+1
+        index=index+1
+
+    if num>3:
         return True
 
     return False
     
+def draw_board(board):
+    for r in range(6):
+        for c in range(7):
+            pygame.draw.rect(screen,(0,0,255),(c*100,(r+1)*100, 100, 100)) 
+            pygame.draw.circle(screen,(0,0,0),(c*100+50,(r+1)*100+50),45)
+
+    for r in range(6):
+        for c in range(7):
+            if(board[r][c]==1):
+                pygame.draw.circle(screen,(255,0,0),(c*100+50,700-(r+1)*100+50),45)
+            elif(board[r][c]==2):
+                pygame.draw.circle(screen,(0,255,0),(c*100+50,700-(r+1)*100+50),45)
+    
+    pygame.display.update()
 
 board = getboard(6,7)
 someone_won = False
 turn = 1
 
+pygame.init()
+height=700
+width=700
+size=(width,height)
+screen=pygame.display.set_mode(size)
+draw_board(board)
+pygame.display.update()
+
+font=pygame.font.SysFont("comicsansms", 80)
+
 while not someone_won:
-    if turn == 1:
-        user_input=input("Ask Player 1 to make selection (between 0-6): ")
-        print(user_input)
 
-        if valid_location(board,user_input):
-            row=add_piece_to_board(board,user_input,1)
-            if check_if_won(board,row,user_input):
-                print("Player 1 Won!!")
-                someone_won=True
+    for event in pygame.event.get():
+        if event.type==pygame.QUIT:
+            sys.exit
+        
+        if event.type==pygame.MOUSEMOTION:
+            pygame.draw.rect(screen,(0,0,0),(0,0,700,100))
+            position=event.pos[0]
+            if turn == 1:
+                pygame.draw.circle(screen,(255,0,0),(position,50),50)
+            elif turn == 2:
+                pygame.draw.circle(screen,(0,255,0),(position,50),50)
+        
+        pygame.display.update()
+
+        if event.type==pygame.MOUSEBUTTONDOWN:
+            if turn == 1:
+                position=event.pos[0]
+                user_input=int(math.floor(position/100))
+
+                if valid_location(board,user_input):
+                    row=add_piece_to_board(board,user_input,1)
+                    if check_if_won(board,row,user_input):
+                        pygame.draw.rect(screen,(0,0,0),(0,0,700,100))
+                        label=font.render("PLAYER 1 WINS",1,(255,0,0))
+                        screen.blit(label, (30,10))
+                        someone_won=True
 
 
-    else:
-        user_input=input("Ask Player 2 to make selection (between 0-6): ")
-        print(user_input)
+            else:
+                position=event.pos[0]
+                user_input=int(math.floor(position/100))
 
-        if valid_location(board,user_input):
-            row=add_piece_to_board(board,user_input,2)
-            if check_if_won(board,row,user_input):
-                print("Player 2 Won!!")
-                someone_won=True
+                if valid_location(board,user_input):
+                    row=add_piece_to_board(board,user_input,2)
+                    if check_if_won(board,row,user_input):
+                        pygame.draw.rect(screen,(0,0,0),(0,0,700,100))
+                        label=font.render("PLAYER 2 WINS",1,(0,255,0))
+                        screen.blit(label, (30,10))
+                        someone_won=True
 
-    print(npy.flip(board,0))
+            draw_board(board)
 
-    if turn == 1:
-        turn=2
-    else:
-        turn=1
+            if turn == 1:
+                turn=2
+            else:
+                turn=1
+        
+    if someone_won:
+        pygame.time.wait(5000)
