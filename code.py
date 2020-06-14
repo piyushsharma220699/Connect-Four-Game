@@ -93,6 +93,9 @@ someone_won = False
 turn = 1
 
 pygame.init()
+pygame.display.set_caption("Let's 4 Connect")
+icon=pygame.image.load('logo.png')
+pygame.display.set_icon(icon)
 height=(ROWLENGTH+1)*LENGTHOFBOX
 width=(COLUMNLENGTH)*LENGTHOFBOX
 size=(width,height)
