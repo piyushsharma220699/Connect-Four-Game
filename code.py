@@ -1,3 +1,5 @@
+# PIYUSH SHARMA
+# 4 CONNECT GAME
 import numpy as npy
 import pygame
 import sys
@@ -125,7 +127,7 @@ while not someone_won:
                     row=add_piece_to_board(board,user_input,1)
                     if check_if_won(board,row,user_input):
                         pygame.draw.rect(screen,(0,0,0),(0,0,COLUMNLENGTH*LENGTHOFBOX,LENGTHOFBOX))
-                        label=font.render("PLAYER 1 WINS",1,(255,0,0))
+                        label=font.render("PLAYER 1 WINS!!!",1,(255,0,0))
                         screen.blit(label, (40,0))
                         someone_won=True
 
@@ -138,7 +140,7 @@ while not someone_won:
                     row=add_piece_to_board(board,user_input,2)
                     if check_if_won(board,row,user_input):
                         pygame.draw.rect(screen,(0,0,0),(0,0,COLUMNLENGTH*LENGTHOFBOX,LENGTHOFBOX))
-                        label=font.render("PLAYER 2 WINS",1,(0,255,0))
+                        label=font.render("PLAYER 2 WINS!!!",1,(0,255,0))
                         screen.blit(label, (40,0))
                         someone_won=True
 
