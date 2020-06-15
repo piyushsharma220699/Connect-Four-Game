@@ -5,14 +5,51 @@ import pygame
 import sys
 import math
 from pygame import mixer
+from sys import exit
+from pygame.locals import *
 
 ROWLENGTH=6
 COLUMNLENGTH=8
 LENGTHOFBOX=100
+STARTGAME=False
 
 def getboard(row,col):
     board=npy.zeros((row,col))
     return board
+
+pygame.init()
+pygame.display.set_caption("Let's 4 Connect")
+icon=pygame.image.load('logo.png')
+pygame.display.set_icon(icon)
+height=(ROWLENGTH+1)*LENGTHOFBOX
+width=(COLUMNLENGTH)*LENGTHOFBOX
+size=(width,height)
+screen=pygame.display.set_mode(size)
+font=pygame.font.SysFont("comicsansms", 60)
+
+
+def introduction(startgame):
+    for row in range(ROWLENGTH):
+        for col in range(COLUMNLENGTH):
+            pygame.draw.rect(screen,(0,0,0),(col*LENGTHOFBOX,row*LENGTHOFBOX, (col+1)*LENGTHOFBOX, (row+1)*LENGTHOFBOX))
+    
+    label=font.render("LET'S PLAY 4 CONNECT",1,(0,0,255))
+    screen.blit(label, (30,0))
+    pygame.display.update()
+    runit=True
+    while runit:
+
+        for event in pygame.event.get():
+            if event.type==pygame.QUIT:
+                runit=False
+
+            if event.type==pygame.MOUSEBUTTONDOWN:
+                x=event.pos[0]
+                y=event.pos[1]
+                if x>350:
+                    startgame=True
+                    runit=False
+    return startgame
 
 def valid_location(board,input):
     return board[ROWLENGTH-1][int(input)] == 0
@@ -89,80 +126,99 @@ def draw_board(board):
     
     pygame.display.update()
 
-board = getboard(ROWLENGTH,COLUMNLENGTH)
-someone_won = False
-turn = 1
+def loopit(height,width):
+    board = getboard(ROWLENGTH,COLUMNLENGTH)
+    draw_board(board)
+    pygame.display.update()
+    mixer.music.load('startsound.ogg')
+    mixer.music.play()
+    someone_won=False
+    turn=1
+    while not someone_won:
 
-pygame.init()
-pygame.display.set_caption("Let's 4 Connect")
-icon=pygame.image.load('logo.png')
-pygame.display.set_icon(icon)
-height=(ROWLENGTH+1)*LENGTHOFBOX
-width=(COLUMNLENGTH)*LENGTHOFBOX
-size=(width,height)
-screen=pygame.display.set_mode(size)
-draw_board(board)
-pygame.display.update()
-mixer.music.load('startsound.ogg')
-mixer.music.play()
-
-font=pygame.font.SysFont("comicsansms", 70)
-
-while not someone_won:
-
-    for event in pygame.event.get():
-        if event.type==pygame.QUIT:
-            sys.exit
-        
-        if event.type==pygame.MOUSEMOTION:
-            pygame.draw.rect(screen,(0,0,0),(0,0,COLUMNLENGTH*LENGTHOFBOX,LENGTHOFBOX))
-            position=event.pos[0]
-            if turn == 1:
-                pygame.draw.circle(screen,(255,0,0),(position,int(LENGTHOFBOX/2)),int(LENGTHOFBOX/2))
-            elif turn == 2:
-                pygame.draw.circle(screen,(0,255,0),(position,int(LENGTHOFBOX/2)),int(LENGTHOFBOX/2))
-        
-        pygame.display.update()
-
-        if event.type==pygame.MOUSEBUTTONDOWN:
-            if turn == 1:
-                position=event.pos[0]
-                user_input=int(math.floor(position/LENGTHOFBOX))
-
-                if valid_location(board,user_input):
-                    row=add_piece_to_board(board,user_input,1)
-                    mixer.music.load('insertsound.wav')
-                    mixer.music.play()
-                    if check_if_won(board,row,user_input):
-                        pygame.draw.rect(screen,(0,0,0),(0,0,COLUMNLENGTH*LENGTHOFBOX,LENGTHOFBOX))
-                        label=font.render("PLAYER 1 WINS!!!",1,(255,0,0))
-                        screen.blit(label, (40,0))
-                        someone_won=True
-
-
-            else:
-                position=event.pos[0]
-                user_input=int(math.floor(position/LENGTHOFBOX))
-
-                if valid_location(board,user_input):
-                    row=add_piece_to_board(board,user_input,2)
-                    mixer.music.load('insertsound.wav')
-                    mixer.music.play()
-                    if check_if_won(board,row,user_input):
-                        pygame.draw.rect(screen,(0,0,0),(0,0,COLUMNLENGTH*LENGTHOFBOX,LENGTHOFBOX))
-                        label=font.render("PLAYER 2 WINS!!!",1,(0,255,0))
-                        screen.blit(label, (40,0))
-                        someone_won=True
-
-            draw_board(board)
+        for event in pygame.event.get():
+            if event.type==pygame.QUIT:
+                someone_won=True
             
+            if event.type==pygame.MOUSEMOTION:
+                pygame.draw.rect(screen,(0,0,0),(0,0,COLUMNLENGTH*LENGTHOFBOX,LENGTHOFBOX))
+                position=event.pos[0]
+                if turn == 1:
+                    pygame.draw.circle(screen,(255,0,0),(position,int(LENGTHOFBOX/2)),int(LENGTHOFBOX/2))
+                elif turn == 2:
+                    pygame.draw.circle(screen,(0,255,0),(position,int(LENGTHOFBOX/2)),int(LENGTHOFBOX/2))
+            
+            pygame.display.update()
 
-            if turn == 1:
-                turn=2
-            else:
-                turn=1
-        
-    if someone_won:
-        mixer.music.load('winsound.mp3')
-        mixer.music.play()
-        pygame.time.wait(5000)
+            if event.type==pygame.MOUSEBUTTONDOWN:
+                if turn == 1:
+                    position=event.pos[0]
+                    user_input=int(math.floor(position/LENGTHOFBOX))
+
+                    if valid_location(board,user_input):
+                        row=add_piece_to_board(board,user_input,1)
+                        mixer.music.load('insertsound.wav')
+                        mixer.music.play()
+                        if check_if_won(board,row,user_input):
+                            pygame.draw.rect(screen,(0,0,0),(0,0,COLUMNLENGTH*LENGTHOFBOX,LENGTHOFBOX))
+                            label=font.render("PLAYER 1 WINS!!!",1,(255,0,0))
+                            screen.blit(label, (40,0))
+                            someone_won=True
+
+
+                else:
+                    position=event.pos[0]
+                    user_input=int(math.floor(position/LENGTHOFBOX))
+
+                    if valid_location(board,user_input):
+                        row=add_piece_to_board(board,user_input,2)
+                        mixer.music.load('insertsound.wav')
+                        mixer.music.play()
+                        if check_if_won(board,row,user_input):
+                            pygame.draw.rect(screen,(0,0,0),(0,0,COLUMNLENGTH*LENGTHOFBOX,LENGTHOFBOX))
+                            label=font.render("PLAYER 2 WINS!!!",1,(0,255,0))
+                            screen.blit(label, (40,0))
+                            someone_won=True
+
+                draw_board(board)
+                
+
+                if turn == 1:
+                    turn=2
+                else:
+                    turn=1
+                
+                if someone_won:
+                    mixer.music.load('winsound.mp3')
+                    mixer.music.play()
+                    pygame.time.wait(5000)
+
+def restartgame(restart):
+    for row in range(ROWLENGTH):
+        for col in range(COLUMNLENGTH):
+            pygame.draw.rect(screen,(0,0,0),(col*LENGTHOFBOX,row*LENGTHOFBOX, (col+1)*LENGTHOFBOX, (row+1)*LENGTHOFBOX))
+    
+    label=font.render("PLAY AGAIN?",1,(0,0,255))
+    screen.blit(label, (30,0))
+    pygame.display.update()
+    runit=True
+    while runit:
+
+        for event in pygame.event.get():
+            if event.type==pygame.QUIT:
+                runit=False
+
+            if event.type==pygame.MOUSEBUTTONDOWN:
+                x=event.pos[0]
+                y=event.pos[1]
+                if x<350:
+                    restart=True
+                    runit=False
+                    
+    return restart
+
+startgame=introduction(False)
+
+while startgame:
+    loopit(height,width)
+    startgame=restartgame(False)
