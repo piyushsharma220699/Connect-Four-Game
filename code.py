@@ -147,7 +147,7 @@ def draw_board(board):
     
     pygame.display.update()
 
-def loopit(height,width):
+def loopit(height,width,endgame):
     board = getboard(ROWLENGTH,COLUMNLENGTH)
     draw_board(board)
     pygame.display.update()
@@ -159,7 +159,8 @@ def loopit(height,width):
 
         for event in pygame.event.get():
             if event.type==pygame.QUIT:
-                someone_won=True
+                endgame=True
+                return endgame
             
             if event.type==pygame.MOUSEMOTION:
                 pygame.draw.rect(screen,(0,0,0),(0,0,COLUMNLENGTH*LENGTHOFBOX,LENGTHOFBOX))
@@ -260,5 +261,8 @@ def restartgame(restart):
 startgame=introduction(False)
 
 while startgame:
-    loopit(height,width)
-    startgame=restartgame(False)
+    endgame=loopit(height,width,False)
+    if endgame:
+        break
+    else:    
+        startgame=restartgame(False)
