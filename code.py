@@ -26,7 +26,7 @@ width=(COLUMNLENGTH)*LENGTHOFBOX
 size=(width,height)
 screen=pygame.display.set_mode(size)
 font=pygame.font.SysFont("comicsansms", 60)
-smallfont=pygame.font.SysFont("comicsansms", 20)
+smallfont=pygame.font.SysFont("comicsansms", 35)
 
 
 def introduction(startgame):
@@ -40,21 +40,27 @@ def introduction(startgame):
     pygame.display.update()
     runit=True
     while runit:
-        pygame.draw.rect(screen,(0,255,0),(150,520,100,50))
-        pygame.draw.rect(screen,(255,0,0),(550,520,100,50))
+        pygame.draw.rect(screen,(0,255,0),(200,150,400,100))
+        pygame.draw.rect(screen,(0,255,0),(200,350,400,100))
+        pygame.draw.rect(screen,(255,0,0),(200,550,400,100))
         mouse=pygame.mouse.get_pos()
         
-        if 150+100>mouse[0]>150 and 520+50>mouse[1]>520:
-            pygame.draw.rect(screen,(0,255,220),(150,520,100,50))
-        if 550+100>mouse[0]>550 and 520+50>mouse[1]>520:
-            pygame.draw.rect(screen,(255,0,220),(550,520,100,50))
+        if 200+400>mouse[0]>200 and 150+100>mouse[1]>150:
+            pygame.draw.rect(screen,(0,255,220),(200,150,400,100))
+        if 200+400>mouse[0]>200 and 350+100>mouse[1]>350:
+            pygame.draw.rect(screen,(0,255,220),(200,350,400,100))
+        if 200+400>mouse[0]>200 and 550+100>mouse[1]>550:
+            pygame.draw.rect(screen,(255,0,220),(200,550,400,100))
         
-        label=smallfont.render("START",1,(0,0,0))
-        text_rect=label.get_rect(center=(200,545))
+        label=smallfont.render("1 PLAYER",1,(0,0,0))
+        text_rect=label.get_rect(center=(400,200))
         screen.blit(label, text_rect)
-        label2=smallfont.render("QUIT",1,(0,0,0))
-        text_rect2=label2.get_rect(center=(600,545))
-        screen.blit(label2, text_rect2) 
+        label2=smallfont.render("2 PLAYER",1,(0,0,0))
+        text_rect2=label2.get_rect(center=(400,400))
+        screen.blit(label2, text_rect2)
+        label3=smallfont.render("QUIT",1,(0,0,0))
+        text_rect3=label3.get_rect(center=(400,600))
+        screen.blit(label3, text_rect3)
         
         for event in pygame.event.get():
             if event.type==pygame.QUIT:
@@ -62,10 +68,11 @@ def introduction(startgame):
 
             if event.type==MOUSEBUTTONDOWN:
                 mouse=pygame.mouse.get_pos()
-                if 150+100>mouse[0]>150 and 520+50>mouse[1]>520:
+                if 200+400>mouse[0]>200 and 350+100>mouse[1]>350:
                     startgame=True
                     runit=False
-                if 550+100>mouse[0]>550 and 520+50>mouse[1]>520:
+                    pygame.time.wait(200)
+                if 200+400>mouse[0]>200 and 550+100>mouse[1]>550:
                     runit=False
 
         pygame.display.update()
@@ -228,18 +235,18 @@ def restartgame(restart):
     pygame.display.update()
     runit=True
     while runit:
-        pygame.draw.rect(screen,(0,255,0),(150,520,100,50))
-        pygame.draw.rect(screen,(255,0,0),(550,520,100,50))
+        pygame.draw.rect(screen,(0,255,0),(200,200,400,100))
+        pygame.draw.rect(screen,(255,0,0),(200,400,400,100))
         mouse=pygame.mouse.get_pos()
-        if 150+100>mouse[0]>150 and 520+50>mouse[1]>520:
-            pygame.draw.rect(screen,(0,255,220),(150,520,100,50))
-        if 550+100>mouse[0]>550 and 520+50>mouse[1]>520:
-            pygame.draw.rect(screen,(255,0,220),(550,520,100,50))
+        if 200+400>mouse[0]>200 and 200+100>mouse[1]>200:
+            pygame.draw.rect(screen,(0,255,220),(200,200,400,100))
+        if 200+400>mouse[0]>200 and 400+100>mouse[1]>400:
+            pygame.draw.rect(screen,(255,0,220),(200,400,400,100))
         label=smallfont.render("RESTART",1,(0,0,0))
-        text_rect=label.get_rect(center=(200,545))
+        text_rect=label.get_rect(center=(400,250))
         screen.blit(label, text_rect)
         label2=smallfont.render("QUIT",1,(0,0,0))
-        text_rect2=label2.get_rect(center=(600,545))
+        text_rect2=label2.get_rect(center=(400,450))
         screen.blit(label2, text_rect2)        
 
         for event in pygame.event.get():
@@ -248,10 +255,10 @@ def restartgame(restart):
 
             if event.type==MOUSEBUTTONDOWN:
                 mouse=pygame.mouse.get_pos()
-                if 150+100>mouse[0]>150 and 520+50>mouse[1]>520:
+                if 200+400>mouse[0]>200 and 200+100>mouse[1]>200:
                     restart=True
                     runit=False
-                if 550+100>mouse[0]>550 and 520+50>mouse[1]>520:
+                if 200+400>mouse[0]>200 and 400+100>mouse[1]>400:
                     runit=False
 
         pygame.display.update()
