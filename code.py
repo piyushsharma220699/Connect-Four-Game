@@ -34,21 +34,34 @@ def introduction(startgame):
             pygame.draw.rect(screen,(0,0,0),(col*LENGTHOFBOX,row*LENGTHOFBOX, (col+1)*LENGTHOFBOX, (row+1)*LENGTHOFBOX))
     
     label=font.render("LET'S PLAY 4 CONNECT",1,(0,0,255))
-    screen.blit(label, (30,0))
+    text_rect=label.get_rect(center=(int((COLUMNLENGTH*LENGTHOFBOX)/2), int(LENGTHOFBOX/2)))
+    screen.blit(label, text_rect)
     pygame.display.update()
     runit=True
     while runit:
-
+        pygame.draw.rect(screen,(0,255,0),(150,520,100,50))
+        pygame.draw.rect(screen,(255,0,0),(550,520,100,50))
+        mouse=pygame.mouse.get_pos()
+        
+        if 150+100>mouse[0]>150 and 520+50>mouse[1]>520:
+            pygame.draw.rect(screen,(0,255,220),(150,520,100,50))
+        if 550+100>mouse[0]>550 and 520+50>mouse[1]>520:
+            pygame.draw.rect(screen,(255,0,220),(550,520,100,50))
+        
         for event in pygame.event.get():
             if event.type==pygame.QUIT:
                 runit=False
 
-            if event.type==pygame.MOUSEBUTTONDOWN:
-                x=event.pos[0]
-                y=event.pos[1]
-                if x>350:
+            if event.type==MOUSEBUTTONDOWN:
+                mouse=pygame.mouse.get_pos()
+                if 150+100>mouse[0]>150 and 520+50>mouse[1]>520:
                     startgame=True
                     runit=False
+                if 550+100>mouse[0]>550 and 520+50>mouse[1]>520:
+                    runit=False
+
+        pygame.display.update()
+
     return startgame
 
 def valid_location(board,input):
@@ -162,7 +175,8 @@ def loopit(height,width):
                         if check_if_won(board,row,user_input):
                             pygame.draw.rect(screen,(0,0,0),(0,0,COLUMNLENGTH*LENGTHOFBOX,LENGTHOFBOX))
                             label=font.render("PLAYER 1 WINS!!!",1,(255,0,0))
-                            screen.blit(label, (40,0))
+                            text_rect=label.get_rect(center=(int((COLUMNLENGTH*LENGTHOFBOX)/2), int(LENGTHOFBOX/2)))
+                            screen.blit(label, text_rect)
                             someone_won=True
 
 
@@ -177,7 +191,8 @@ def loopit(height,width):
                         if check_if_won(board,row,user_input):
                             pygame.draw.rect(screen,(0,0,0),(0,0,COLUMNLENGTH*LENGTHOFBOX,LENGTHOFBOX))
                             label=font.render("PLAYER 2 WINS!!!",1,(0,255,0))
-                            screen.blit(label, (40,0))
+                            text_rect=label.get_rect(center=(int((COLUMNLENGTH*LENGTHOFBOX)/2), int(LENGTHOFBOX/2)))
+                            screen.blit(label, text_rect)
                             someone_won=True
 
                 draw_board(board)
@@ -199,21 +214,32 @@ def restartgame(restart):
             pygame.draw.rect(screen,(0,0,0),(col*LENGTHOFBOX,row*LENGTHOFBOX, (col+1)*LENGTHOFBOX, (row+1)*LENGTHOFBOX))
     
     label=font.render("PLAY AGAIN?",1,(0,0,255))
-    screen.blit(label, (30,0))
+    text_rect=label.get_rect(center=(int((COLUMNLENGTH*LENGTHOFBOX)/2), int(LENGTHOFBOX/2)))
+    screen.blit(label, text_rect)
     pygame.display.update()
     runit=True
     while runit:
+        pygame.draw.rect(screen,(0,255,0),(150,520,100,50))
+        pygame.draw.rect(screen,(255,0,0),(550,520,100,50))
+        mouse=pygame.mouse.get_pos()
+        if 150+100>mouse[0]>150 and 520+50>mouse[1]>520:
+            pygame.draw.rect(screen,(0,255,220),(150,520,100,50))
+        if 550+100>mouse[0]>550 and 520+50>mouse[1]>520:
+            pygame.draw.rect(screen,(255,0,220),(550,520,100,50))
 
         for event in pygame.event.get():
             if event.type==pygame.QUIT:
                 runit=False
 
-            if event.type==pygame.MOUSEBUTTONDOWN:
-                x=event.pos[0]
-                y=event.pos[1]
-                if x<350:
+            if event.type==MOUSEBUTTONDOWN:
+                mouse=pygame.mouse.get_pos()
+                if 150+100>mouse[0]>150 and 520+50>mouse[1]>520:
                     restart=True
                     runit=False
+                if 550+100>mouse[0]>550 and 520+50>mouse[1]>520:
+                    runit=False
+
+        pygame.display.update()
                     
     return restart
 
