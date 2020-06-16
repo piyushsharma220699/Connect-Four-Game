@@ -26,6 +26,7 @@ width=(COLUMNLENGTH)*LENGTHOFBOX
 size=(width,height)
 screen=pygame.display.set_mode(size)
 font=pygame.font.SysFont("comicsansms", 60)
+smallfont=pygame.font.SysFont("comicsansms", 20)
 
 
 def introduction(startgame):
@@ -47,6 +48,13 @@ def introduction(startgame):
             pygame.draw.rect(screen,(0,255,220),(150,520,100,50))
         if 550+100>mouse[0]>550 and 520+50>mouse[1]>520:
             pygame.draw.rect(screen,(255,0,220),(550,520,100,50))
+        
+        label=smallfont.render("START",1,(0,0,0))
+        text_rect=label.get_rect(center=(200,545))
+        screen.blit(label, text_rect)
+        label2=smallfont.render("QUIT",1,(0,0,0))
+        text_rect2=label2.get_rect(center=(600,545))
+        screen.blit(label2, text_rect2) 
         
         for event in pygame.event.get():
             if event.type==pygame.QUIT:
@@ -226,6 +234,12 @@ def restartgame(restart):
             pygame.draw.rect(screen,(0,255,220),(150,520,100,50))
         if 550+100>mouse[0]>550 and 520+50>mouse[1]>520:
             pygame.draw.rect(screen,(255,0,220),(550,520,100,50))
+        label=smallfont.render("RESTART",1,(0,0,0))
+        text_rect=label.get_rect(center=(200,545))
+        screen.blit(label, text_rect)
+        label2=smallfont.render("QUIT",1,(0,0,0))
+        text_rect2=label2.get_rect(center=(600,545))
+        screen.blit(label2, text_rect2)        
 
         for event in pygame.event.get():
             if event.type==pygame.QUIT:
