@@ -84,7 +84,7 @@ def introduction(startgame):
     return startgame
 
 def valid_location(board,input):
-    return board[ROWLENGTH-1][int(input)] == 0
+    return board[ROWLENGTH-1][input] == 0
 
 def add_piece_to_board(board,input,player):
     row=0
@@ -92,6 +92,15 @@ def add_piece_to_board(board,input,player):
         row=row+1
     board[int(row)][int(input)]=player
     return int(row)
+
+def get_valid_locations(board):
+    List=[]
+    i=0
+    while i<COLUMNLENGTH:
+        if(valid_location(board,i)):
+            List.append(i)
+        i=i+1
+    return List
 
 def check_if_won(board,temprow,tempcol):
     row=int(temprow)
@@ -281,7 +290,7 @@ def looponeplayer():
         if turn==2 and not someone_won:
             pygame.draw.rect(screen,(0,0,0),(0,0,COLUMNLENGTH*LENGTHOFBOX,LENGTHOFBOX))
             pygame.display.update()
-            col=random.randint(0,COLUMNLENGTH-1)
+            col, score=alphabetapruning(board,2,-math.inf,math.inf,True)
             if valid_location(board,col):
                 pygame.time.wait(1000)
                 row=add_piece_to_board(board,col,2)
@@ -307,66 +316,135 @@ def looponeplayer():
         
     restartgamewithAI()
 
+def winning_move(board, piece):
+	for c in range(COLUMNLENGTH-3):
+		for r in range(ROWLENGTH):
+			if board[r][c] == piece and board[r][c+1] == piece and board[r][c+2] == piece and board[r][c+3] == piece:
+				return True
 
+	for c in range(COLUMNLENGTH):
+		for r in range(ROWLENGTH-3):
+			if board[r][c] == piece and board[r+1][c] == piece and board[r+2][c] == piece and board[r+3][c] == piece:
+				return True
 
-# def score_position(board,piece):
-#     score=0
-#     for row in range(ROWLENGTH):
-#         row_array=[int(i) for i in list(board[row,:])]
-#         for col in range(COLUMNLENGTH-3):
-#             window=row_array[col:col+WINDOW_LENGTH]
+	for c in range(COLUMNLENGTH-3):
+		for r in range(ROWLENGTH-3):
+			if board[r][c] == piece and board[r+1][c+1] == piece and board[r+2][c+2] == piece and board[r+3][c+3] == piece:
+				return True
 
-#             if window.count(piece)==4:
-#                 score+=100
-#             elif window.count(piece)==3 and window.count(EMPTY)==1:
-#                 score+=10
+	for c in range(COLUMNLENGTH-3):
+		for r in range(3, ROWLENGTH):
+			if board[r][c] == piece and board[r-1][c+1] == piece and board[r-2][c+2] == piece and board[r-3][c+3] == piece:
+				return True
+
+def score_position(board):
+    score=0
+
+    center_array=[int(i) for i in list (board[:,COLUMNLENGTH//2])]
+    center_count=center_array.count(2)
+    score+=center_count*6
+
+    for row in range(ROWLENGTH):
+        row_array=[int(i) for i in list(board[row,:])]
+        for col in range(COLUMNLENGTH-3):
+            window=row_array[col:col+4]
+
+            if window.count(2)==4:
+                score+=100
+            elif window.count(2)==3 and window.count(0)==1:
+                score+=5
+            elif window.count(2)==2 and window.count(0)==2:
+                score+=2
+            
+            if window.count(1) == 3 and window.count(0) == 1:
+                score=score-4
+
     
-#     for col in range(COLUMNLENGTH):
-#         col_array=[int(i) for i in list(board[col,:])]
-#         for col in range(ROWLENGTH-3):
-#             window=col_array[row:row+WINDOW_LENGTH]
+    for col in range(COLUMNLENGTH):
+        col_array=[int(i) for i in list(board[:,col])]
+        for col in range(ROWLENGTH-3):
+            window=col_array[row:row+4]
 
-#             if window.count(piece)==4:
-#                 score+=100
-#             elif window.count(piece)==3 and window.count(EMPTY)==1:
-#                 score+=10
+            if window.count(2)==4:
+                score+=100
+            elif window.count(2)==3 and window.count(0)==1:
+                score+=5
+            elif window.count(2)==2 and window.count(0)==2:
+                score+=2
+            
+            if window.count(1) == 3 and window.count(0) == 1:
+                score=score-4
     
-#     return score
+    for row in range(ROWLENGTH-3):
+        for col in range(COLUMNLENGTH-3):
+            window=[board[row+i][col+i] for i in range(4)]
 
-# def alphabetapruning(board,depth,alpha,beta,maximizingplayer)
-# {
-#     if 
-
-#     if maximizingplayer:
-#         value= -math.inf
-#         for i=0 to board[0].size():
-#             if valid_location(board,i):
-#                 board_copy=board.copy()
-#                 add_piece_to_board(board,i,AI)
-#                 new_score=alphabetapruning(board_copy,depth-1,alpha,beta,False)[1]
-#                 if new_score>value:
-#                     value=new_score
-#                     column=col
-#                 alpha=max(alpha,value)
-#                 if alpha>=beta:
-#                     break    
-#         return column,value
+            if window.count(2)==4:
+                score+=100
+            elif window.count(2)==3 and window.count(0)==1:
+                score+=5
+            elif window.count(2)==2 and window.count(0)==2:
+                score+=2
+            
+            if window.count(1) == 3 and window.count(0) == 1:
+                score=score-4
     
-#     else:
-#         value=math.inf
-#         for i=0 to board[0].size():
-#             if valid_loaction(board,i):
-#                 board_copy=board.copy()
-#                 add_piece_to_board(board,i,PLAYER)
-#                 new_score=alphabetapruning(board_copy,depth-1,alpha,beta,True)[1]
-#                 if new_score<value:
-#                     value=new_score
-#                     column=col
-#                 beta=min(beta,value)
-#                 if alpha>=beta:
-#                     break    
-#         return column,value
-# }
+    for row in range(ROWLENGTH-3):
+        for col in range(COLUMNLENGTH-3):
+            window=[board[row+3-i][col+i] for i in range(4)]
+
+            if window.count(2)==4:
+                score+=100
+            elif window.count(2)==3 and window.count(0)==1:
+                score+=5
+            elif window.count(2)==2 and window.count(0)==2:
+                score+=2
+            
+            if window.count(1) == 3 and window.count(0) == 1:
+                score=score-4
+                
+    return score
+
+def alphabetapruning(board,depth,alpha,beta,maximizingplayer):
+    valid_loc_list=get_valid_locations(board)
+    if winning_move(board, 2):
+        return (None, 100000000000000)
+    elif winning_move(board, 1):
+        return (None, -10000000000000)
+    elif len(valid_loc_list)==0:
+        return (None, 0)
+    elif depth==0:
+        return (None,score_position(board))
+
+    if maximizingplayer:
+        value= -math.inf
+        for i in valid_loc_list:
+            board_copy=board.copy()
+            row=add_piece_to_board(board_copy,i,2)
+            new_score=alphabetapruning(board_copy,depth-1,alpha,beta,False)[1]
+            if new_score>value:
+                value=new_score
+                column=i
+            alpha=max(alpha,value)
+            if alpha>=beta:
+                break    
+        return column,value
+    
+    else:
+        value=math.inf
+        for i in valid_loc_list:
+            if valid_location(board,i):
+                board_copy=board.copy()
+                row=add_piece_to_board(board_copy,i,1)
+                new_score=alphabetapruning(board_copy,depth-1,alpha,beta,True)[1]
+                if new_score<value:
+                    value=new_score
+                    column=i
+                beta=min(beta,value)
+                if alpha>=beta:
+                    break    
+        return column,value
+
 
 def restartgame(restart):
     for row in range(ROWLENGTH):
