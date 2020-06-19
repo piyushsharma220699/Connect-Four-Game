@@ -15,5 +15,5 @@ To run the code, you must have Python 3 installed to your system, along with num
 After that, download the code and run code.py!
 Happy gaming!
 
-For a video solution of the problem with some different functionalities, you can look at the following video solution provided by Keith Galli(just for a start):
+I've tried to make the game look better by adding both one player and two player feature in it. Also, I've added sounds also to make the game look a bit more realistic. For a video solution of the problem with some different functionalities, you can look at the following video solution provided by Keith Galli(just for a start):
 https://www.youtube.com/watch?v=UYgyRArKDEs&list=PLFCB5Dp81iNV_inzM-R9AKkZZlePCZdtV
