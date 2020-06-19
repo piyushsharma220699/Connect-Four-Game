@@ -55,13 +55,20 @@ def introduction(startgame):
             if event.type==MOUSEBUTTONDOWN:
                 mouse=pygame.mouse.get_pos()
                 if 200+400>mouse[0]>200 and 150+100>mouse[1]>150:
+                    mixer.music.load('button_click.wav')
+                    mixer.music.play()
                     askdifficulty()
                     runit=False
                 if 200+400>mouse[0]>200 and 350+100>mouse[1]>350:
                     startgame=True
                     runit=False
+                    mixer.music.load('button_click.wav')
+                    mixer.music.play()
                     pygame.time.wait(200)
                 if 200+400>mouse[0]>200 and 550+100>mouse[1]>550:
+                    mixer.music.load('button_click.wav')
+                    mixer.music.play()
+                    pygame.time.wait(200)
                     runit=False
 
         pygame.display.update()
@@ -154,6 +161,7 @@ def draw_board(board):
 def loopit(height,width,endgame):
     board = getboard(ROWLENGTH,COLUMNLENGTH)
     draw_board(board)
+    pygame.draw.rect(screen,(0,0,0),(0,0,COLUMNLENGTH*LENGTHOFBOX,LENGTHOFBOX))
     pygame.display.update()
     mixer.music.load('startsound.ogg')
     mixer.music.play()
@@ -257,15 +265,21 @@ def askdifficulty():
             if event.type==MOUSEBUTTONDOWN:
                 mouse=pygame.mouse.get_pos()
                 if 200+400>mouse[0]>200 and 150+100>mouse[1]>150:
-                    pygame.time.wait(200)
+                    mixer.music.load('button_click.wav')
+                    mixer.music.play()
+                    pygame.time.wait(400)
                     looponeplayer(2)
                     runit=False
                 if 200+400>mouse[0]>200 and 350+100>mouse[1]>350:
-                    pygame.time.wait(200)
+                    mixer.music.load('button_click.wav')
+                    mixer.music.play()
+                    pygame.time.wait(400)
                     looponeplayer(3)
                     runit=False
                 if 200+400>mouse[0]>200 and 550+100>mouse[1]>550:
-                    pygame.time.wait(200)
+                    mixer.music.load('button_click.wav')
+                    mixer.music.play()
+                    pygame.time.wait(400)
                     looponeplayer(4)
                     runit=False
 
@@ -276,6 +290,7 @@ def looponeplayer(DIFFICULTY):
     board = getboard(ROWLENGTH,COLUMNLENGTH)
     draw_board(board)
     pygame.display.update()
+    pygame.draw.rect(screen,(0,0,0),(0,0,COLUMNLENGTH*LENGTHOFBOX,LENGTHOFBOX))
     mixer.music.load('startsound.ogg')
     mixer.music.play()
     someone_won=False
