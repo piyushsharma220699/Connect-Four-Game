@@ -9,7 +9,6 @@ from pygame.locals import *
 ROWLENGTH=6
 COLUMNLENGTH=8
 LENGTHOFBOX=100
-STARTGAME=False
 
 def getboard(row,col):
     board=npy.zeros((row,col))
@@ -23,6 +22,8 @@ def introduction(startgame):
     label=font.render("LET'S PLAY 4 CONNECT",1,(0,0,255))
     text_rect=label.get_rect(center=(int((COLUMNLENGTH*LENGTHOFBOX)/2), int(LENGTHOFBOX/2)))
     screen.blit(label, text_rect)
+    mixer.music.load('introduction.wav')
+    mixer.music.play()
     pygame.display.update()
     runit=True
     while runit:
