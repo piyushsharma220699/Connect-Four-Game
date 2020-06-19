@@ -2,12 +2,9 @@
 # 4 CONNECT GAME
 import numpy as npy
 import pygame
-import sys
 import math
 from pygame import mixer
-from sys import exit
 from pygame.locals import *
-import random
 
 ROWLENGTH=6
 COLUMNLENGTH=8
@@ -17,18 +14,6 @@ STARTGAME=False
 def getboard(row,col):
     board=npy.zeros((row,col))
     return board
-
-pygame.init()
-pygame.display.set_caption("Let's 4 Connect")
-icon=pygame.image.load('logo.png')
-pygame.display.set_icon(icon)
-height=(ROWLENGTH+1)*LENGTHOFBOX
-width=(COLUMNLENGTH)*LENGTHOFBOX
-size=(width,height)
-screen=pygame.display.set_mode(size)
-font=pygame.font.SysFont("comicsansms", 60)
-smallfont=pygame.font.SysFont("comicsansms", 35)
-
 
 def introduction(startgame):
     for row in range(ROWLENGTH):
@@ -70,7 +55,7 @@ def introduction(startgame):
             if event.type==MOUSEBUTTONDOWN:
                 mouse=pygame.mouse.get_pos()
                 if 200+400>mouse[0]>200 and 150+100>mouse[1]>150:
-                    looponeplayer()
+                    askdifficulty()
                     runit=False
                 if 200+400>mouse[0]>200 and 350+100>mouse[1]>350:
                     startgame=True
@@ -80,7 +65,6 @@ def introduction(startgame):
                     runit=False
 
         pygame.display.update()
-
     return startgame
 
 def valid_location(board,input):
@@ -207,6 +191,7 @@ def loopit(height,width,endgame):
                             text_rect=label.get_rect(center=(int((COLUMNLENGTH*LENGTHOFBOX)/2), int(LENGTHOFBOX/2)))
                             screen.blit(label, text_rect)
                             someone_won=True
+                        turn=2
 
 
                 else:
@@ -223,22 +208,71 @@ def loopit(height,width,endgame):
                             text_rect=label.get_rect(center=(int((COLUMNLENGTH*LENGTHOFBOX)/2), int(LENGTHOFBOX/2)))
                             screen.blit(label, text_rect)
                             someone_won=True
+                        turn=1
 
                 draw_board(board)
-                
-
-                if turn == 1:
-                    turn=2
-                else:
-                    turn=1
                 
                 if someone_won:
                     mixer.music.load('winsound.mp3')
                     mixer.music.play()
                     pygame.time.wait(5000)
 
+def askdifficulty():
+    for row in range(ROWLENGTH):
+        for col in range(COLUMNLENGTH):
+            pygame.draw.rect(screen,(0,0,0),(col*LENGTHOFBOX,row*LENGTHOFBOX, (col+1)*LENGTHOFBOX, (row+1)*LENGTHOFBOX))
+    
+    label=font.render("SELECT DIFFICULTY",1,(0,0,255))
+    text_rect=label.get_rect(center=(int((COLUMNLENGTH*LENGTHOFBOX)/2), int(LENGTHOFBOX/2)))
+    screen.blit(label, text_rect)
+    pygame.display.update()
+    runit=True
+    while runit:
+        pygame.draw.rect(screen,(0,255,0),(200,150,400,100))
+        pygame.draw.rect(screen,(0,255,0),(200,350,400,100))
+        pygame.draw.rect(screen,(255,0,0),(200,550,400,100))
+        mouse=pygame.mouse.get_pos()
+        
+        if 200+400>mouse[0]>200 and 150+100>mouse[1]>150:
+            pygame.draw.rect(screen,(0,255,220),(200,150,400,100))
+        if 200+400>mouse[0]>200 and 350+100>mouse[1]>350:
+            pygame.draw.rect(screen,(0,255,220),(200,350,400,100))
+        if 200+400>mouse[0]>200 and 550+100>mouse[1]>550:
+            pygame.draw.rect(screen,(255,0,220),(200,550,400,100))
+        
+        label=smallfont.render("EASY",1,(0,0,0))
+        text_rect=label.get_rect(center=(400,200))
+        screen.blit(label, text_rect)
+        label2=smallfont.render("MEDIUM",1,(0,0,0))
+        text_rect2=label2.get_rect(center=(400,400))
+        screen.blit(label2, text_rect2)
+        label3=smallfont.render("EXTREME",1,(0,0,0))
+        text_rect3=label3.get_rect(center=(400,600))
+        screen.blit(label3, text_rect3)
+        
+        for event in pygame.event.get():
+            if event.type==pygame.QUIT:
+                runit=False
 
-def looponeplayer():
+            if event.type==MOUSEBUTTONDOWN:
+                mouse=pygame.mouse.get_pos()
+                if 200+400>mouse[0]>200 and 150+100>mouse[1]>150:
+                    pygame.time.wait(200)
+                    looponeplayer(2)
+                    runit=False
+                if 200+400>mouse[0]>200 and 350+100>mouse[1]>350:
+                    pygame.time.wait(200)
+                    looponeplayer(3)
+                    runit=False
+                if 200+400>mouse[0]>200 and 550+100>mouse[1]>550:
+                    pygame.time.wait(200)
+                    looponeplayer(4)
+                    runit=False
+
+        pygame.display.update()
+
+
+def looponeplayer(DIFFICULTY):
     board = getboard(ROWLENGTH,COLUMNLENGTH)
     draw_board(board)
     pygame.display.update()
@@ -258,9 +292,6 @@ def looponeplayer():
                 position=event.pos[0]
                 if turn == 1:
                     pygame.draw.circle(screen,(255,0,0),(position,int(LENGTHOFBOX/2)),int(LENGTHOFBOX/2))
-                elif turn == 2:
-                    pygame.draw.circle(screen,(0,255,0),(position,int(LENGTHOFBOX/2)),int(LENGTHOFBOX/2))
-            
             pygame.display.update()
 
             if event.type==pygame.MOUSEBUTTONDOWN:
@@ -279,10 +310,7 @@ def looponeplayer():
                             screen.blit(label, text_rect)
                             someone_won=True
                         
-                    if turn == 1:
                         turn=2
-                    else:
-                        turn=1
                     draw_board(board)
                     pygame.display.update()
 
@@ -290,7 +318,7 @@ def looponeplayer():
         if turn==2 and not someone_won:
             pygame.draw.rect(screen,(0,0,0),(0,0,COLUMNLENGTH*LENGTHOFBOX,LENGTHOFBOX))
             pygame.display.update()
-            col, score=alphabetapruning(board,2,-math.inf,math.inf,True)
+            col, score=alphabetapruning(board,DIFFICULTY,-math.inf,math.inf,True)
             if valid_location(board,col):
                 pygame.time.wait(1000)
                 row=add_piece_to_board(board,col,2)
@@ -304,10 +332,7 @@ def looponeplayer():
                     someone_won=True
 
                 draw_board(board)        
-                if turn == 1:
-                    turn=2
-                else:
-                    turn=1
+                turn=1
         
         if someone_won:
             mixer.music.load('winsound.mp3')
@@ -342,7 +367,7 @@ def score_position(board):
 
     center_array=[int(i) for i in list (board[:,COLUMNLENGTH//2])]
     center_count=center_array.count(2)
-    score+=center_count*6
+    score+=center_count*3
 
     for row in range(ROWLENGTH):
         row_array=[int(i) for i in list(board[row,:])]
@@ -520,7 +545,7 @@ def restartgamewithAI():
             if event.type==MOUSEBUTTONDOWN:
                 mouse=pygame.mouse.get_pos()
                 if 200+400>mouse[0]>200 and 200+100>mouse[1]>200:
-                    looponeplayer()
+                    askdifficulty()
                     runit=False
                 if 200+400>mouse[0]>200 and 400+100>mouse[1]>400:
                     runit=False
@@ -528,9 +553,18 @@ def restartgamewithAI():
         pygame.display.update()
 
 
+pygame.init()
+pygame.display.set_caption("Let's 4 Connect")
+icon=pygame.image.load('logo.png')
+pygame.display.set_icon(icon)
+height=(ROWLENGTH+1)*LENGTHOFBOX
+width=(COLUMNLENGTH)*LENGTHOFBOX
+size=(width,height)
+screen=pygame.display.set_mode(size)
+font=pygame.font.SysFont("comicsansms", 60)
+smallfont=pygame.font.SysFont("comicsansms", 35)
 
 startgame=introduction(False)
-
 while startgame:
     endgame=loopit(height,width,False)
     if endgame:
