@@ -351,7 +351,7 @@ def looponeplayer(DIFFICULTY):
                 turn=1
         
         if someone_won:
-            mixer.music.load('winsound.mp3')
+            mixer.music.load('winner.wav')
             mixer.music.play()
             pygame.time.wait(5000)
         
